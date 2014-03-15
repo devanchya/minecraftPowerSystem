@@ -1,16 +1,40 @@
+-- LUA script for base on 8bitmc.com world TPPI
+-- This a personal script and most likely useless for everyone else
+
 print('ReactorControl Engaged. View Monitor.')
 
 emptyflag=0
 offlineflag=0
 flashflag=0
 
-reactor=peripheral.wrap('BigReactors-Reactor_0')
 monitor=peripheral.wrap('top')
-cellHead=peripheral.wrap('cofh_thermalexpansion_energycell_4')
-cellTail=peripheral.wrap('cofh_thermalexpansion_energycell_3')
-
 monitor.setTextScale(1)
 monitor.setBackgroundColor(colors.black)
+
+if peripheral.wrap('BigReactors-Reactor_0') ~= nil then
+  reactor=peripheral.wrap('BigReactors-Reactor_0')
+else
+  monitor.setTextColor(colors.red)
+  monitor.setCursor(1,1)
+  monitor.write('Big Reactor is not connected')
+end
+
+if peripheral.wrap('cofh_thermalexpansion_energycell_4') ~= nil then
+  cellHead=peripheral.wrap('cofh_thermalexpansion_energycell_4')
+else
+  monitor.setTextColor(colors.red)
+  monitor.setCursor(1,1)
+  monitor.write('Top Energy Cell is not connected')
+end
+
+if peripheral.wrap('cofh_thermalexpansion_energycell_3') ~= nil then
+  cellTail=peripheral.wrap('cofh_thermalexpansion_energycell_3')
+else
+  monitor.setTextColor(colors.red)
+  monitor.setCursor(1,1)
+  monitor.write('Top Energy Cell is not connected')
+end
+
  
 while true do
 monitor.clear()
@@ -84,7 +108,7 @@ if flashflag==0 then
     monitor.write('OFFLINE - Fuel Exhausted')
   end
   if emptyflag==0 and offlineflag==0 and reactor.getControlRodLevel(0)>75 then
-    monitor.setCursorPos(15,1)
+    wmonitor.setCursorPos(15,1)
     monitor.setTextColor(colors.yellow)
     monitor.write('ONLINE - Low Power Mode')
   end
