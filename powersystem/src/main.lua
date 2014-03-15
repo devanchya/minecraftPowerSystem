@@ -57,6 +57,13 @@ monitor.setCursorPos(1,11)
 monitor.setTextColor(colors.green)
 monitor.write(reactor.getEnergyStored()..' RF Stored      ')
 
+monitor.setCursorPos(1,14)
+monitor.write('Top Cell'..cellHead.getEnergyStored('top'))
+monitor.setCursorPos(1,15)
+monitor.write('Top Cell'..cellTail.getEnergyStored('top'))
+
+
+
 if reactor.getEnergyProducedLastTick()>=500 and reactor.getEnergyProducedLastTick()<2000 then
     monitor.setTextColor(colors.orange)
 end
@@ -125,8 +132,6 @@ if rs.getInput('top')==true and emptyflag==0 then
     offlineflag=1
 end    
 
-monitor.setCursorPos(1,18)
-monitor.write('Top Cell'..cellHead.getEnergyStored('top'))
 
 sleep(1)
 end
