@@ -14,25 +14,19 @@ monitor.setBackgroundColor(colors.black)
 if peripheral.wrap('BigReactors-Reactor_0') ~= nil then
   reactor=peripheral.wrap('BigReactors-Reactor_0')
 else
-  monitor.setTextColor(colors.red)
-  monitor.setCursor(1,1)
-  monitor.write('Big Reactor is not connected')
+  error('Big Reactor is not connected')
 end
 
 if peripheral.wrap('cofh_thermalexpansion_energycell_4') ~= nil then
   cellHead=peripheral.wrap('cofh_thermalexpansion_energycell_4')
 else
-  monitor.setTextColor(colors.red)
-  monitor.setCursor(1,1)
-  monitor.write('Top Energy Cell is not connected')
+  error('Top Energy Cell is not connected')
 end
 
 if peripheral.wrap('cofh_thermalexpansion_energycell_3') ~= nil then
   cellTail=peripheral.wrap('cofh_thermalexpansion_energycell_3')
 else
-  monitor.setTextColor(colors.red)
-  monitor.setCursor(1,1)
-  monitor.write('Top Energy Cell is not connected')
+  error('Top Energy Cell is not connected')
 end
 
  
