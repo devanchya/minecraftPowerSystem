@@ -108,7 +108,7 @@ if flashflag==0 then
     monitor.write('OFFLINE - Fuel Exhausted')
   end
   if emptyflag==0 and offlineflag==0 and reactor.getControlRodLevel(0)>75 then
-    wmonitor.setCursorPos(15,1)
+    monitor.setCursorPos(15,1)
     monitor.setTextColor(colors.yellow)
     monitor.write('ONLINE - Low Power Mode')
   end
