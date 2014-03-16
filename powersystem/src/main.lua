@@ -12,44 +12,50 @@ local function getRodPercent ( rodNum )
   return (100-(reactor.getControlRodLevel( rodNum )))
 end
 
-print('ReactorControl Engaged. View Monitor.')
-
 emptyflag=0
 offlineflag=0
 flashflag=0
+
+bigreactor = 'BigReactors-Reactor_0'
+energycell1 = 'cofh_thermalexpansion_energycell_4'
+energycell2 = 'cofh_thermalexpansion_energycell_3'
+overridecomputer = 'computer_2'
 
 monitor=peripheral.wrap('top')
 monitor.setTextScale(1)
 monitor.setBackgroundColor(colors.black)
 
-if peripheral.wrap('BigReactors-Reactor_0') ~= nil then
-  reactor=peripheral.wrap('BigReactors-Reactor_0')
+
+if peripheral.wrap(bigreactor) ~= nil then
+  reactor=peripheral.wrap(bigreactor)
 else
   error('Big Reactor is not connected')
   return
 end
 
-if peripheral.wrap('cofh_thermalexpansion_energycell_4') ~= nil then
-  cellHead=peripheral.wrap('cofh_thermalexpansion_energycell_4')
+if peripheral.wrap(energycell1) ~= nil then
+  cellHead=peripheral.wrap(energycell1)
 else
   error('Top Energy Cell is not connected')
   return
 end
 
-if peripheral.wrap('cofh_thermalexpansion_energycell_3') ~= nil then
-  cellTail=peripheral.wrap('cofh_thermalexpansion_energycell_3')
+if peripheral.wrap(energycell2) ~= nil then
+  cellTail=peripheral.wrap(energycell2)
 else
   error('Bottom Energy Cell is not connected')
   return
 end
 
-if peripheral.wrap('computer_2') ~= nil then
-  overideSwitch=peripheral.wrap('computer_2')
+if peripheral.wrap(overridecomputer) ~= nil then
+  overideSwitch=peripheral.wrap(overridecomputer)
 else
   error('Override Switch not connected')
   return
 end
- 
+
+print('ReactorControl Engaged. View Monitor.')
+
 while true do
   monitor.clear()
   monitor.setCursorPos(1,1)
