@@ -9,7 +9,7 @@ local function getOverrideSignal ( )
   monitor.setCursorPos(1,12)
   monitor.write("Override Status: ")
   monitor.setCursorPos(1,13)
-  monitor.write(message..freq..rfreq..side)  
+  monitor.write("->"..message..freq..rfreq..side)  
   return message
 end
 
