@@ -71,7 +71,7 @@ end
 monitor.clear()
 
 local overrideWatch = coroutine.create( getOverrideSignal )
-print ('Create Check'.. overrideWatch )
+--print ('Create Check'.. overrideWatch )
 local evt = {}
 
 print('ReactorControl Engaged. View Monitor.')
