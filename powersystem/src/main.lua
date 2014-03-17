@@ -18,10 +18,10 @@ local function getRodPercent ( rodNum )
 end
 
 local function setReactorStatus( )
--- shutdown or startup reactor
+  -- shutdown or startup reactor
   if overrideFlag==true then
-      reactor.setAllControlRodLevels(100)
-      reactor.setActive(false)
+    reactor.setAllControlRodLevels(100)
+    reactor.setActive(false)
   end
 end
 
@@ -99,19 +99,19 @@ while true do
   monitor.write('Rod 4:  '..getRodPercent(3)..'% ')
   monitor.setCursorPos(20,7)
   monitor.write('Rod 5:  '..getRodPercent(4)..'% ')
-  
-  
+
+
   monitor.setCursorPos(1,9)
   monitor.setTextColor(colors.white)
   monitor.write('Temperature:')
   monitor.setCursorPos(15,9)
   if reactor.getTemperature()>=650 then
-      monitor.setTextColor(colors.purple)
-      else if reactor.getTemperature()>=950 then
-          monitor.setTextColor(colors.red)
-      else
-          monitor.setTextColor(colors.green)
-      end
+    monitor.setTextColor(colors.purple)
+  else if reactor.getTemperature()>=950 then
+    monitor.setTextColor(colors.red)
+  else
+    monitor.setTextColor(colors.green)
+  end
   end
   monitor.write(reactor.getTemperature()..'C')
   monitor.setCursorPos(1,10)
@@ -120,28 +120,28 @@ while true do
   monitor.setCursorPos(1,11)
   monitor.setTextColor(colors.green)
   monitor.write(reactor.getEnergyStored()..' RF Stored      ')
-  
+
   cellHeadStored=cellHead.getEnergyStored('top')
   cellTailStored=cellTail.getEnergyStored('top')
-  
-  
+
+
   if reactor.getEnergyProducedLastTick()>=500 and reactor.getEnergyProducedLastTick()<2000 then
-      monitor.setTextColor(colors.orange)
+    monitor.setTextColor(colors.orange)
   end
-  
+
   if reactor.getEnergyProducedLastTick()>=2000 then
-      monitor.setTextColor(colors.red)
+    monitor.setTextColor(colors.red)
   end
-  
+
   monitor.write((math.floor(reactor.getEnergyProducedLastTick()+0.5))..'RF/t')
   monitor.setCursorPos(15,1)
   monitor.setTextColor(colors.orange)
-  
+
   overrideFlag = coroutine.resume( overrideWatch )
   if coroutine.status( overrideWatch ) == "dead" then
     overrideWatch = coroutine.create( getOverrideSignal )
   end
-  
+
   if overrideFlag==true then
     if flashflag==0 then
       flashflag=1
@@ -170,48 +170,48 @@ while true do
       monitor.setCursorPos(1,13)
       monitor.clearLine()
     end
-     
+
     if reactor.getEnergyStored()>=1 and reactor.getTemperature()<=900 and emptyflag==0 and offlineflag==0 then
-        reactor.setAllControlRodLevels(math.floor(reactor.getEnergyStored()/100000))
+      reactor.setAllControlRodLevels(math.floor(reactor.getEnergyStored()/100000))
     else
       if reactor.getEnergyStored()==0 and emptyflag==0 and offlineflag==0 then
-          reactor.setAllControlRodLevels(math.floor(reactor.getTemperature()/10))
+        reactor.setAllControlRodLevels(math.floor(reactor.getTemperature()/10))
       else
-         reactor.setAllControlRodLevels(80)
+        reactor.setAllControlRodLevels(80)
       end
     end
-    
+
     if reactor.getFuelAmount()<=100 and offlineflag==0 then
-        reactor.setAllControlRodLevels(100)
-        reactor.setActive(false)
-        emptyflag=1
+      reactor.setAllControlRodLevels(100)
+      reactor.setActive(false)
+      emptyflag=1
     else
-        emptyflag=0
+      emptyflag=0
     end
-          
+
     if rs.getInput('top')==false and emptyflag==0 then
-        reactor.setActive(true)
-        offlineflag=0
+      --reactor.setActive(true)
+      offlineflag=0
     end
-      
+
     if rs.getInput('top')==true and emptyflag==0 then
-        reactor.setActive(false)
-        reactor.setAllControlRodLevels(100)
-        offlineflag=1
+      reactor.setActive(false)
+      reactor.setAllControlRodLevels(100)
+      offlineflag=1
     end
- else
-        setReactorStatus( "override" )
-        monitor.setCursorPos(15,1)
-        monitor.setTextColor(colors.lightGray)
-        monitor.write('OFFLINE - Manual Override') 
- end   
-  
+  else
+    setReactorStatus( "override" )
+    monitor.setCursorPos(15,1)
+    monitor.setTextColor(colors.lightGray)
+    monitor.write('OFFLINE - Manual Override') 
+  end   
+
   monitor.setTextColor(colors.white)
   monitor.setCursorPos(1,14)
   monitor.write('Top Cell'..cellHeadStored)
   monitor.setCursorPos(1,15)
   monitor.write('Top Cell'..cellTailStored)
-  
+
   evt = {os.pullEvent()}
   sleep(1)
 end
