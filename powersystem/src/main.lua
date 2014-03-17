@@ -68,7 +68,8 @@ else
   return
 end
 
-overrideWatch = coroutine.create( getOverrideSignal )
+local overrideWatch = coroutine.create( getOverrideSignal )
+print ( overrideWatch )
 local evt = {}
 
 print('ReactorControl Engaged. View Monitor.')
