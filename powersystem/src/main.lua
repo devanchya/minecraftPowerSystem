@@ -12,9 +12,18 @@ local function getRodPercent ( rodNum )
   return (100-(reactor.getControlRodLevel( rodNum )))
 end
 
+local function setReactorStatus( )
+-- shutdown or startup reactor
+  if overrideFlag==true then
+      reactor.setAllControlRodLevels(100)
+      reactor.setActive(false)
+  end
+end
+
 emptyflag=0
 offlineflag=0
 flashflag=0
+overrideFlag=0
 
 bigreactor = 'BigReactors-Reactor_0'
 energycell1 = 'cofh_thermalexpansion_energycell_4'
@@ -54,6 +63,8 @@ else
   return
 end
 
+overrideWatch = coroutine.create( getOverrideSignal )
+
 print('ReactorControl Engaged. View Monitor.')
 
 while true do
@@ -66,7 +77,8 @@ while true do
   monitor.write(math.floor(((reactor.getFuelAmount()/reactor.getFuelAmountMax())*100)+0.5)..'% Fuel')
   monitor.setCursorPos(1,3)
   monitor.setTextColor(colors.lightBlue)
-  monitor.write(math.floor(((reactor.getWasteAmount()/reactor.getFuelAmountMax())*100)+0.5)..'% Waste')
+  --We really don't care about waste since it is being auto-converted
+  --monitor.write(math.floor(((reactor.getWasteAmount()/reactor.getFuelAmountMax())*100)+0.5)..'% Waste')
   monitor.setCursorPos(1,5)
   monitor.setTextColor(colors.white)
   monitor.write('Control Rod Levels:')
@@ -119,63 +131,74 @@ while true do
   monitor.setCursorPos(15,1)
   monitor.setTextColor(colors.orange)
   
-  
-  if flashflag==0 then
-    flashflag=1
-    if offlineflag==1 then
-      monitor.setCursorPos(15,1)
-      monitor.setTextColor(colors.lightGray)
-      monitor.write('OFFLINE - Manual Override')
-    end
-    if emptyflag==1 then
-      monitor.setCursorPos(15,1)
-      monitor.setTextColor(colors.pink)
-      monitor.write('OFFLINE - Fuel Exhausted')
-    end
-    if emptyflag==0 and offlineflag==0 and reactor.getControlRodLevel(0)>75 then
-      monitor.setCursorPos(15,1)
-      monitor.setTextColor(colors.yellow)
-      monitor.write('ONLINE - Low Power Mode')
-    end
-    if emptyflag==0 and offlineflag==0 and reactor.getControlRodLevel(0)<=75 then
-      monitor.setCursorPos(15,1)
-      monitor.setTextColor(colors.orange)
-      monitor.write('ONLINE - High Power Mode')
-    end
-  else
-    flashflag=0
-    monitor.setCursorPos(1,13)
-    monitor.clearLine()
+  overrideFlag = coroutine.resume( overrideWatch )
+  if coroutine.status( overrideWatch ) == "dead" then
+    overrideWatch = coroutine.create( getOverrideSignal )
   end
-   
-  if reactor.getEnergyStored()>=1 and reactor.getTemperature()<=900 and emptyflag==0 and offlineflag==0 then
-      reactor.setAllControlRodLevels(math.floor(reactor.getEnergyStored()/100000))
-  else
-    if reactor.getEnergyStored()==0 and emptyflag==0 and offlineflag==0 then
-        reactor.setAllControlRodLevels(math.floor(reactor.getTemperature()/10))
+  
+  if overrideFlag==true then
+    if flashflag==0 then
+      flashflag=1
+      if offlineflag==1 then
+        monitor.setCursorPos(15,1)
+        monitor.setTextColor(colors.lightGray)
+        monitor.write('OFFLINE - Manual Override')
+      end
+      if emptyflag==1 then
+        monitor.setCursorPos(15,1)
+        monitor.setTextColor(colors.pink)
+        monitor.write('OFFLINE - Fuel Exhausted')
+      end
+      if emptyflag==0 and offlineflag==0 and reactor.getControlRodLevel(0)>75 then
+        monitor.setCursorPos(15,1)
+        monitor.setTextColor(colors.yellow)
+        monitor.write('ONLINE - Low Power Mode')
+      end
+      if emptyflag==0 and offlineflag==0 and reactor.getControlRodLevel(0)<=75 then
+        monitor.setCursorPos(15,1)
+        monitor.setTextColor(colors.orange)
+        monitor.write('ONLINE - High Power Mode')
+      end
     else
-       reactor.setAllControlRodLevels(80)
+      flashflag=0
+      monitor.setCursorPos(1,13)
+      monitor.clearLine()
     end
-  end
-  
-  if reactor.getFuelAmount()<=100 and offlineflag==0 then
-      reactor.setAllControlRodLevels(100)
-      reactor.setActive(false)
-      emptyflag=1
-  else
-      emptyflag=0
-  end
-        
-  if rs.getInput('top')==false and emptyflag==0 then
-      reactor.setActive(true)
-      offlineflag=0
-  end
+     
+    if reactor.getEnergyStored()>=1 and reactor.getTemperature()<=900 and emptyflag==0 and offlineflag==0 then
+        reactor.setAllControlRodLevels(math.floor(reactor.getEnergyStored()/100000))
+    else
+      if reactor.getEnergyStored()==0 and emptyflag==0 and offlineflag==0 then
+          reactor.setAllControlRodLevels(math.floor(reactor.getTemperature()/10))
+      else
+         reactor.setAllControlRodLevels(80)
+      end
+    end
     
-  if rs.getInput('top')==true and emptyflag==0 then
-      reactor.setActive(false)
-      reactor.setAllControlRodLevels(100)
-      offlineflag=1
-  end    
+    if reactor.getFuelAmount()<=100 and offlineflag==0 then
+        reactor.setAllControlRodLevels(100)
+        reactor.setActive(false)
+        emptyflag=1
+    else
+        emptyflag=0
+    end
+          
+    if rs.getInput('top')==false and emptyflag==0 then
+        reactor.setActive(true)
+        offlineflag=0
+    end
+      
+    if rs.getInput('top')==true and emptyflag==0 then
+        reactor.setActive(false)
+        reactor.setAllControlRodLevels(100)
+        offlineflag=1
+    end
+ else
+        setReactorStatus( "override" )
+        monitor.setCursorPos(15,1)
+        monitor.setTextColor(colors.lightGray)
+        monitor.write('OFFLINE - Manual Override') 
+ end   
   
   monitor.setTextColor(colors.white)
   monitor.setCursorPos(1,14)
