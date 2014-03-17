@@ -68,6 +68,7 @@ else
   error('Override Switch not connected')
   return
 end
+monitor.clear()
 
 local overrideWatch = coroutine.create( getOverrideSignal )
 print ( overrideWatch )
