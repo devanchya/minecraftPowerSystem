@@ -8,8 +8,8 @@ local function getOverrideSignal ( )
   monitor.setTextColor(colors.white)
   monitor.setCursorPos(1,12)
   monitor.write("Override Status: ")
-  monitor.setCursorPos(20,12)
-  monitor.write(message)  
+  monitor.setCursorPos(1,13)
+  monitor.write(message..freq..rfreq..side)  
   return message
 end
 
