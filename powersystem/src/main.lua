@@ -78,7 +78,7 @@ while true do
   
   if couroutine.status( overrideWatch ) == "dead" then
     overrideWatch = coroutine.create( getOverrideSignal )
-    write( "Resetting Override Watch" )
+    print ( 'Resetting Override Watch' )
   end
 
   evt = {os.pullEvent()}
