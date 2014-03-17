@@ -78,7 +78,7 @@ print('ReactorControl Engaged. View Monitor.')
 
 while true do
   overrideSignal = coroutine.resume(overrideWatch, unpack(evt))
-  print ('While Check'..overrideSignal )
+  print ('While Check'..message )
   if coroutine.status( overrideWatch ) == "dead" then
     overrideWatch = coroutine.create( getOverrideSignal )
     print ( 'Resetting Override Watch' )
