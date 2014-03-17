@@ -3,8 +3,8 @@
 
 local function getOverrideSignal ( )
   local cs=peripheral.wrap('bottom')
-  cs.open(1)
-  local _, side, freq, rfreq, message = {os.pullEvent}
+  cs.open(1,1)
+  local _, side, freq, rfreq, message = {os.pullEvent()}
   monitor.setTextColor(colors.white)
   monitor.setCursorPos(1,12)
   monitor.write("Override Status: ")
