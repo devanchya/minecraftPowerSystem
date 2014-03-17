@@ -5,6 +5,11 @@ local function getOverrideSignal ( )
   local cs=peripheral.wrap('bottom')
   cs.open(1)
   local _, side, freq, rfreq, message = {os.pullEvent}
+  monitor.setTextColor(colors.white)
+  monitor.setCursorPos(1,12)
+  monitor.write("Override Status: ")
+  monitor.setCursorPos(20,12)
+  monitor.write(message)  
   return message
 end
 
@@ -64,6 +69,7 @@ else
 end
 
 overrideWatch = coroutine.create( getOverrideSignal )
+local evt = {}
 
 print('ReactorControl Engaged. View Monitor.')
 
@@ -206,5 +212,6 @@ while true do
   monitor.setCursorPos(1,15)
   monitor.write('Top Cell'..cellTailStored)
   
+  evt = {os.pullEvent()}
   sleep(1)
 end
