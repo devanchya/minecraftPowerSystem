@@ -2,15 +2,15 @@
 -- This a personal script and most likely useless for everyone else
 
 local function getOverrideSignal ( )
-  local cs=peripheral.wrap('bottom')
-  cs.open(1,1)
-  local _, side, freq, rfreq, message = {os.pullEvent('modem_message')}
+  local modem=peripheral.wrap('bottom')
+  modem.open(851,1)
+  local _, side, freq, rfreq, message, distance = {os.pullEvent('modem_message')}
   monitor.setTextColor(colors.white)
   monitor.setCursorPos(1,12)
-  monitor.write("Override Status: ")
+  monitor.write('Override Status: '..message)
   monitor.setCursorPos(1,13)
-  monitor.write("->"..message..freq..rfreq..side)  
-  print ("->"..message..freq..rfreq..side)  
+  monitor.write('->'..message..freq..rfreq..side)  
+  print ('->'..message..freq..rfreq..side)  
   return message
 end
 
