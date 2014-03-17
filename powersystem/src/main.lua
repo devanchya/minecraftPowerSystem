@@ -1,7 +1,7 @@
 -- LUA script for base on 8bitmc.com world TPPI
 -- This a personal script and most likely useless for everyone else
 
-local function getOverideSignal ( )
+local function getOverrideSignal ( )
   local cs=peripheral.wrap('bottom')
   cs.open(1)
   local _, side, freq, rfreq, message = {os.pullEvent}
